@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lunbo</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .tuul{
+            width: 1189px;
+            height: 340px;
+            margin: 100px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .bg{
+            list-style: none;
+        }
+        .bg li{
+            position: absolute;
+            background-color: #000;
+        }
+        .bg li img{
+            width: 100%;
+            height: 100%;
+        }
+        .waiting{
+            display: none;
+        }
+        .bg li.no0{
+            width: 174px;height:122px;left:-116px;top:100px;z-index: 777;
+        }
+        .bg li.no1{
+            width: 356px;height:223px;left:0px;top:26px;z-index: 888;
+        }
+        .bg li.no2{
+            width: 642px;height:273px;left:274px;top:0px;z-index: 999;
+        }
+        .bg li.no3{
+            width: 356px;height:223px;left:834px;top:26px;z-index: 888;
+        }
+        .bg li.no4{
+            width: 174px;height:122px;left:1097px;top:100px;z-index: 777;
+        }
+        .bg li.no1 img , .bg li.no3 img{
+            opacity: 0.3;
+        }
+        /*按钮部分*/
+        .button{
+            width: 600px;
+            height: 20px;
+            position: absolute;
+            top: 312px;
+            left: 454px;
+        }
+        .button ul{
+            list-style: none;
+        }
+        .button li{
+            float: left;
+            width: 16px;
+            height: 16px;
+            background-color: blue;
+            margin-right: 10px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+        .button li.cur{
+            background-color:red;
+        }
+    </style>
+    <script src="jquery.min.js"></script>
+</head>
+<body>
+<div class="tuul">
+    <!--左右-->
+    <div class="button-two">
+        <span class="left"></span>
+        <span class="right"></span>
+    </div>
+    <!--图片-->
+    <ul class="bg">
+        <li class="no0"><img src="优酷轮播图image/image1.jpg" height="410" width="970"/></li>
+        <li class="no1"><img src="优酷轮播图image/image2.jpg" height="410" width="970"/></li>
+        <li class="no2"><img src="优酷轮播图image/image3.jpg" height="410" width="970"/></li>
+        <li class="no3"><img src="优酷轮播图image/image4.jpg" height="410" width="970"/></li>
+        <li class="no4"><img src="优酷轮播图image/image5.jpg" height="410" width="970"/></li>
+        <li class="waiting"><img src="优酷轮播图image/image6.jpg" height="410" width="970"/></li>
+        <li class="waiting"><img src="优酷轮播图image/image7.jpg" height="410" width="970"/></li>
+        <li class="waiting"><img src="优酷轮播图image/image8.jpg" height="410" width="970"/></li>
+        <li class="waiting"><img src="优酷轮播图image/iamge9.jpg" height="410" width="970"/></li>
+    </ul>
+    <!--按钮-->
+    <div class="button">
+        <ul>
+            <li></li>
+            <li></li>
+            <li class="cur"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(
+        function () {
+            //设置速度
+            var speed = 600;
+            var shangdi=false;
+            //将出现在网页上的图片的高度宽度以及位置赋值给json
+            var json0 = {"width": "174px", "height": "122px", "left": "-116px", "top": "100px"};
+            var json1 = {"width": "356px", "height": "223px", "left": "0px", "top": "26px"};
+            var json2 = {"width": "642px", "height": "273px", "left": "274px", "top": "0"};
+            var json3 = {"width": "356px", "height": "223px", "left": "834px", "top": "26px"};
+            var json4 = {"width": "174px", "height": "122px", "left": "1097px", "top": "100px"};
+            //现在按钮的位置和图片的位置对应
+            var nowing = 2;
+            //设置运动函数以及运动时间
+            //让图片动起来
+            var timer = setInterval(scrollImg, 2000);
+            $(".tuul").mouseenter(
+                function () {
+                    clearInterval(timer);
+                }
+            );
+            $(".tuul").mouseleave(
+                function () {
+                    clearInterval(timer);
+                    timer = setInterval(scrollImg, 2000)
+                }
+            );
+            //把图片如何运动包装起来
+            function scrollImg() {
+                if (!$(".tuul li").is(":animated")||shangdi==true) {
+                    //按钮和图片的实时对应
+                    if (nowing <8) {
+                        nowing++;
+                    } else {
+                        nowing = 0;
+                    }
+                    $('.button li').eq(nowing).addClass('cur').siblings().removeClass('cur')
+                    //先交换位置
+                    $(".no1").animate(json0, speed);
+                    $('.no2').animate(json1, speed);
+                    $('.no3').animate(json2, speed);
+                    $('.no4').animate(json3, speed);
+                    $('.no0').css(json4);
+                    //在交换身份
+                    $('.no0').attr('class', 'waiting');
+                    $('.no1').attr('class', 'no0');
+                    $('.no2').attr('class', 'no1');
+                    $('.no3').attr('class', 'no2');
+                    $('.no4').attr('class', 'no3');
+                    //没有no0了
+                    if ($('.no3').next().length != 0) {
+                        $('.no3').next().attr('class', 'no4')
+                    } else {
+                        $('.bg li:eq(0)').attr('class', 'no4')
+                    }
+                    $(".no4").css(json4);
+
+                }
+            }
+            //scroll
+            $('.right').click(scrollImg)
+            $('.left').click(function () {
+                if (!$(".tuul li").is(":animated")||shangdi==true) {
+                    //按钮和图片的实时对应
+                    if (nowing >0) {
+                        nowing--;
+                    } else {
+                        nowing = 8;
+                    }
+                    $('.button li').eq(nowing).addClass('cur').siblings().removeClass('cur')
+                    //先交换位置
+                    $(".no0").animate(json1, speed);
+                    $('.no1').animate(json2, speed);
+                    $('.no2').animate(json3, speed);
+                    $('.no3').animate(json4, speed);
+                    $('.no4').css(json0);
+                    //在交换身份
+                    $('.no4').attr('class', 'waiting');
+                    $('.no3').attr('class', 'no4');
+                    $('.no2').attr('class', 'no3');
+                    $('.no1').attr('class', 'no2');
+                    $('.no0').attr('class', 'no1');
+                    //没有no0了
+                    if ($('.no1').prev().length != 0) {
+                        $('.no1').prev().attr('class', 'no0')
+                    } else {
+                        $('.bg li:last').attr('class', 'no0')
+                    }
+                    $(".no0").css(json0);
+                }
+            });
+            $('.button li').click(function () {
+                speed=100;
+                shangdi=true
+                var indexImg=$(this).index();
+                if(indexImg<nowing){
+                    var count=Math.abs(nowing-indexImg);
+                    console.log("主人，我已经通知上帝帮你按左按钮" + count+ "次");
+                    for(var i=1;i<=count;i++){
+                        $('.left').trigger('click')
+                    }
+                }else{
+                    var count=Math.abs(nowing-indexImg);
+                    console.log("主人，我已经通知上帝帮你按右按钮" + count + "次");
+                    for(var i=1;i<=count;i++){
+                        $('.right').trigger('click')
+                    }
+                }
+                nowing=indexImg;
+                speed=600;
+                shangdi=false
+            })
+        }
+    )
+</script>
+</body>
+</html>
